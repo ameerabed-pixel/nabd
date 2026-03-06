@@ -62,7 +62,7 @@ button.action-btn:hover{ background:var(--hover); }
 .hidden{display:none !important;}
 audio{width:100%;border-radius:8px;}
 
-/* لوحة تسجيل الدخول */
+/* لوحات تسجيل الدخول وإنشاء الحساب والإعدادات */
 .login-panel{
   position:fixed;
   top:50%; left:50%;
@@ -93,6 +93,7 @@ audio{width:100%;border-radius:8px;}
 }
 .login-panel button:hover{ background:var(--hover); color:white; }
 .login-panel h3{margin:0;text-align:center;color:var(--dark);}
+.admin-panel { margin-top:20px; } /* مسافة بين المنشورات ولوحة الإضافة */
 </style>
 </head>
 <body>
@@ -101,21 +102,39 @@ audio{width:100%;border-radius:8px;}
   <div>نـبـض</div>
   <div>
     <button id="loginToggleBtn"><i class="fa-solid fa-right-to-bracket"></i> تسجيل الدخول</button>
+    <button id="accountSettingsBtn" class="hidden"><i class="fa-solid fa-user-cog"></i> إعدادات الحساب</button>
     <button id="logoutBtn" class="hidden"><i class="fa-solid fa-right-from-bracket"></i> تسجيل الخروج</button>
   </div>
 </header>
 
-<!-- لوحة تسجيل الدخول مخفية افتراضيًا -->
+<!-- لوحة تسجيل الدخول / إنشاء حساب -->
 <div class="login-panel hidden" id="loginBox">
-  <h3><i class="fa-solid fa-user-shield"></i> تسجيل دخول الأدمن</h3>
+  <h3><i class="fa-solid fa-user-shield"></i> تسجيل دخول / إنشاء حساب</h3>
   <input id="user" placeholder="الايميل">
   <input id="pass" type="password" placeholder="كلمة المرور">
   <button onclick="login()"><i class="fa-solid fa-right-to-bracket"></i> دخول</button>
+  <hr>
+  <input id="newEmail" placeholder="الايميل">
+  <input id="newPass" type="password" placeholder="كلمة المرور">
+  <input id="username" placeholder="اسم المستخدم">
+  <input type="file" id="profilePic">
+  <button onclick="signup()"><i class="fa-solid fa-user-plus"></i> إنشاء حساب</button>
+</div>
+
+<!-- إعدادات الحساب -->
+<div class="login-panel hidden" id="accountSettingsBox">
+  <h3><i class="fa-solid fa-user-cog"></i> إعدادات الحساب</h3>
+  <input id="newUsername" placeholder="اسم المستخدم الجديد">
+  <input type="file" id="newProfilePic">
+  <button onclick="updateAccount()"><i class="fa-solid fa-save"></i> حفظ التغييرات</button>
 </div>
 
 <div class="main-container">
-  <div class="posts-container" id="postsContainer"></div>
+  <div class="posts-container" id="postsContainer">
+    <!-- المنشورات ستظهر هنا -->
+  </div>
 
+  <!-- الأخبار -->
   <div class="news-panel">
     <h3><i class="fa-solid fa-newspaper"></i> أخبار عاجلة</h3>
     <ul id="newsList"></ul>
@@ -126,6 +145,7 @@ audio{width:100%;border-radius:8px;}
   </div>
 </div>
 
+<!-- لوحة إضافة المنشور في نهاية الصفحة -->
 <div class="admin-panel hidden" id="adminPanel">
   <h3><i class="fa-solid fa-pencil"></i> إضافة منشور</h3>
   <textarea id="postText" placeholder="اكتب المنشور"></textarea>
@@ -154,17 +174,23 @@ firebase.initializeApp(firebaseConfig);
 const CLOUD_NAME="drqglqclz";
 const UPLOAD_PRESET="khursa";
 
-let isAdmin=false;
 let currentUser=null;
-
 const loginBox=document.getElementById("loginBox");
 const addNewsPanel=document.getElementById("addNewsPanel");
 const logoutBtn=document.getElementById("logoutBtn");
+const accountSettingsBtn=document.getElementById("accountSettingsBtn");
+const accountSettingsBox=document.getElementById("accountSettingsBox");
 
-// إظهار/إخفاء تسجيل الدخول
-document.getElementById("loginToggleBtn").addEventListener("click", ()=>{
-  loginBox.classList.toggle("hidden");
-});
+document.getElementById("loginToggleBtn").addEventListener("click", ()=>{ loginBox.classList.toggle("hidden"); });
+
+let selectedFile=null;
+let selectedMusic=null;
+let profileFile=null;
+let newProfileFile=null;
+document.getElementById("postImage").addEventListener("change",e=>{ selectedFile=e.target.files[0]; });
+document.getElementById("postMusic").addEventListener("change",e=>{ selectedMusic=e.target.files[0]; });
+document.getElementById("profilePic").addEventListener("change", e=>{ profileFile=e.target.files[0]; });
+document.getElementById("newProfilePic").addEventListener("change", e=>{ newProfileFile=e.target.files[0]; });
 
 // تسجيل الدخول
 function login(){
@@ -172,49 +198,46 @@ function login(){
   let pass=document.getElementById("pass").value;
   firebase.auth().signInWithEmailAndPassword(email,pass)
   .then((cred)=>{
-    isAdmin=true;
     currentUser=cred.user;
     loginBox.classList.add("hidden");
     document.getElementById("adminPanel").classList.remove("hidden");
     addNewsPanel.classList.remove("hidden");
     logoutBtn.classList.remove("hidden");
+    accountSettingsBtn.classList.remove("hidden");
     document.getElementById("loginToggleBtn").classList.add("hidden");
     showPosts();
     showNews();
   })
-  .catch((error)=>{
-    alert("فشل تسجيل الدخول: " + error.message);
-  });
+  .catch((error)=>{ alert("فشل تسجيل الدخول: " + error.message); });
 }
 
-// تسجيل الخروج
-logoutBtn.addEventListener("click", ()=>{
-  firebase.auth().signOut().then(()=>{
-    isAdmin=false;
-    currentUser=null;
-    document.getElementById("adminPanel").classList.add("hidden");
-    addNewsPanel.classList.add("hidden");
-    logoutBtn.classList.add("hidden");
-    document.getElementById("loginToggleBtn").classList.remove("hidden");
-    showPosts(); // إعادة عرض المنشورات بدون أزرار الحذف
-  });
-});
+// إنشاء حساب جديد
+async function signup(){
+  let email = document.getElementById("newEmail").value.trim();
+  let pass = document.getElementById("newPass").value;
+  let username = document.getElementById("username").value.trim();
+  if(!email || !pass || !username) { alert("املأ جميع الحقول"); return; }
 
-// رفع الملفات
-let selectedFile=null;
-let selectedMusic=null;
-document.getElementById("postImage").addEventListener("change",e=>{ selectedFile=e.target.files[0]; });
-document.getElementById("postMusic").addEventListener("change",e=>{ selectedMusic=e.target.files[0]; });
+  let usernameExists = await firebase.database().ref("users").orderByChild("username").equalTo(username).once("value");
+  if(usernameExists.exists()){ alert("اسم المستخدم موجود مسبقاً"); return; }
 
-async function addPost(){
-  let text=document.getElementById("postText").value.trim();
-  if(!text){ alert("اكتب المنشور"); return; }
-  let imgUrl="", musicUrl="";
-  if(selectedFile){ imgUrl = await uploadFile(selectedFile,"image"); selectedFile=null; document.getElementById("postImage").value=""; }
-  if(selectedMusic){ musicUrl = await uploadFile(selectedMusic,"video"); selectedMusic=null; document.getElementById("postMusic").value=""; }
-  let id=Date.now();
-  firebase.database().ref("posts/"+id).set({ text:text, date:id, img:imgUrl, music:musicUrl });
-  document.getElementById("postText").value="";
+  firebase.auth().createUserWithEmailAndPassword(email, pass)
+  .then(async cred => {
+    let profileURL = "";
+    if(profileFile){
+      profileURL = await uploadFile(profileFile, "image");
+      profileFile = null;
+      document.getElementById("profilePic").value="";
+    }
+    firebase.database().ref("users/" + cred.user.uid).set({
+      username: username,
+      profile: profileURL,
+      email: email
+    });
+    alert("تم إنشاء الحساب بنجاح!");
+    loginBox.classList.add("hidden");
+  })
+  .catch(err => { alert("خطأ في التسجيل: " + err.message); });
 }
 
 async function uploadFile(file,type){
@@ -227,12 +250,38 @@ async function uploadFile(file,type){
   return data.secure_url;
 }
 
-// عرض المنشورات (المنشورات تظهر دائمًا، أزرار الحذف فقط إذا admin)
+// إضافة منشور
+async function addPost(){
+  let text=document.getElementById("postText").value.trim();
+  if(!text){ alert("اكتب المنشور"); return; }
+
+  let imgUrl="", musicUrl="";
+  if(selectedFile){ imgUrl = await uploadFile(selectedFile,"image"); selectedFile=null; document.getElementById("postImage").value=""; }
+  if(selectedMusic){ musicUrl = await uploadFile(selectedMusic,"video"); selectedMusic=null; document.getElementById("postMusic").value=""; }
+
+  let userData = await firebase.database().ref("users/"+currentUser.uid).once("value");
+
+  let id=Date.now();
+  await firebase.database().ref("posts/"+id).set({
+    text:text,
+    date:id,
+    img:imgUrl,
+    music:musicUrl,
+    userId: currentUser.uid,
+    username: userData.val().username,
+    userProfile: userData.val().profile
+  });
+
+  document.getElementById("postText").value="";
+  showPosts();
+}
+
+// عرض المنشورات
 function showPosts(){
   const container=document.getElementById("postsContainer");
   firebase.database().ref("posts").on("value",snapshot=>{
     container.innerHTML="";
-    if(!snapshot.exists()){ container.innerHTML="<p>لا توجد منشورات</p>"; return; }
+    if(!snapshot.exists()){ container.innerHTML+="<p>لا توجد منشورات</p>"; return; }
     let posts=[];
     snapshot.forEach(child=>{ posts.push({id:child.key,data:child.val()}); });
     posts.sort((a,b)=>b.data.date - a.data.date); 
@@ -245,15 +294,23 @@ function showPosts(){
       let userLikes = p.likes || {};
       let liked = currentUser && userLikes[currentUser.uid] ? true : false;
       let likeText = liked ? "❤️" : "🤍";
+
+      let deleteBtn = (currentUser && p.userId === currentUser.uid) ? `<button class="action-btn" onclick="deletePost('${id}')"><i class="fa-solid fa-trash"></i> حذف</button>` : "";
+
       container.innerHTML+=`
       <div class="card">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <img src="${p.userProfile ? p.userProfile : 'https://i.pravatar.cc/40?img=68'}" 
+               style="width:40px;height:40px;border-radius:50%;">
+          <strong>${p.username}</strong>
+        </div>
         <p>${p.text}</p>
         <div style="color:gray;font-size:13px">📅 ${formattedDate}</div>
         ${p.img?`<img src="${p.img}">`:""}
         ${p.music?`<audio controls src="${p.music}"></audio>`:""}
         <div class="post-actions">
           <button class="action-btn" onclick="toggleLike('${id}')">${likeText} ${Object.keys(userLikes).length}</button>
-          ${isAdmin?`<button class="action-btn" onclick="deletePost('${id}')"><i class="fa-solid fa-trash"></i> حذف</button>`:""}
+          ${deleteBtn}
         </div>
         <div class="comment-box">
           <input id="comment${id}" placeholder="تعليق">
@@ -271,13 +328,18 @@ function toggleLike(postId){
   ref.once("value",snap=>{ if(snap.exists()){ ref.remove(); }else{ ref.set(true); } });
 }
 
-function deletePost(id){ firebase.database().ref("posts/"+id).remove(); }
 function addComment(id){
   let text=document.getElementById("comment"+id).value.trim();
   if(!text) return;
   let cid=Date.now();
   firebase.database().ref("posts/"+id+"/comments/"+cid).set(text);
   document.getElementById("comment"+id).value="";
+}
+
+function deletePost(postId){
+  if(confirm("هل أنت متأكد من حذف هذا المنشور؟")){
+    firebase.database().ref("posts/"+postId).remove();
+  }
 }
 
 // الأخبار
@@ -298,34 +360,96 @@ function showNews(){
     snapshot.forEach(child=>{ newsArr.push({id:child.key, text:child.val()}); });
     newsArr.sort((a,b)=>b.id - a.id);
     newsArr.forEach(n=>{
-      let deleteBtn = isAdmin ? `<button onclick="deleteNews('${n.id}')"><i class="fa-solid fa-trash"></i> حذف</button>` : "";
+      let deleteBtn = currentUser ? 
+        `<button class="action-btn" style="margin-left:10px;" onclick="deleteNews('${n.id}')">
+           <i class="fa-solid fa-trash"></i> حذف
+         </button>` 
+        : "";
       list.innerHTML+=`<li>${n.text} ${deleteBtn}</li>`;
     });
   });
 }
 
-function deleteNews(newsId){ if(isAdmin) firebase.database().ref("news/"+newsId).remove(); }
+function deleteNews(newsId){
+  if(confirm("هل أنت متأكد من حذف هذا الخبر؟")){
+    firebase.database().ref("news/"+newsId).remove();
+  }
+}
+
+// إعدادات الحساب
+accountSettingsBtn.addEventListener("click", ()=>{ accountSettingsBox.classList.toggle("hidden"); });
+
+async function updateAccount(){
+  if(!currentUser) return;
+  let newUsername = document.getElementById("newUsername").value.trim();
+  let updates = {};
+  
+  if(newUsername){
+    let usernameExists = await firebase.database().ref("users").orderByChild("username").equalTo(newUsername).once("value");
+    if(usernameExists.exists() && !usernameExists.hasChild(currentUser.uid)){
+      alert("اسم المستخدم موجود مسبقاً"); return;
+    }
+    updates.username = newUsername;
+  }
+
+  if(newProfileFile){
+    let profileURL = await uploadFile(newProfileFile,"image");
+    updates.profile = profileURL;
+    newProfileFile = null;
+    document.getElementById("newProfilePic").value="";
+  }
+
+  if(Object.keys(updates).length>0){
+    await firebase.database().ref("users/"+currentUser.uid).update(updates);
+
+    if(updates.username || updates.profile){
+      let postsSnapshot = await firebase.database().ref("posts").orderByChild("userId").equalTo(currentUser.uid).once("value");
+      postsSnapshot.forEach(post=>{
+        let postUpdates = {};
+        if(updates.username) postUpdates.username = updates.username;
+        if(updates.profile) postUpdates.userProfile = updates.profile;
+        firebase.database().ref("posts/"+post.key).update(postUpdates);
+      });
+    }
+
+    alert("تم تحديث الحساب والمنشورات!");
+    accountSettingsBox.classList.add("hidden");
+    showPosts();
+  }
+}
+
+// تسجيل الخروج
+logoutBtn.addEventListener("click", ()=>{
+  firebase.auth().signOut().then(()=>{
+    currentUser=null;
+    document.getElementById("adminPanel").classList.add("hidden");
+    addNewsPanel.classList.add("hidden");
+    logoutBtn.classList.add("hidden");
+    accountSettingsBtn.classList.add("hidden");
+    document.getElementById("loginToggleBtn").classList.remove("hidden");
+    showPosts();
+    showNews();
+  });
+});
 
 // عند تحميل الصفحة
-firebase.auth().onAuthStateChanged(user=>{
+firebase.auth().onAuthStateChanged(async user=>{
   if(user){
     currentUser=user;
-    isAdmin=true;
     loginBox.classList.add("hidden");
     document.getElementById("adminPanel").classList.remove("hidden");
     addNewsPanel.classList.remove("hidden");
     logoutBtn.classList.remove("hidden");
+    accountSettingsBtn.classList.remove("hidden");
     document.getElementById("loginToggleBtn").classList.add("hidden");
     showPosts();
     showNews();
   } else {
-    isAdmin=false;
     currentUser=null;
     showPosts();
     showNews();
   }
 });
 </script>
-
 </body>
 </html>
