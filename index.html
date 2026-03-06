@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نـبـض</title>
+<style>
+:root{
+  --dark:#30364F;
+  --blue:#ACBAC4;
+  --beige:#E1D9BC;
+  --light:#F0F0DB;
+  --white:#fff;
+  --hover:#2c3145;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  font-family:'Segoe UI',Tahoma,sans-serif;
+  background:var(--light);
+  color:var(--dark);
+  direction:rtl;
+}
+header{
+  background:var(--dark);
+  color:white;
+  padding:15px 20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:22px;
+  position:sticky;
+  top:0;
+  z-index:1000;
+  box-shadow:0 4px 12px rgba(0,0,0,0.2);
+}
+header button{
+  background:var(--blue);
+  color:var(--dark);
+  border:none;
+  padding:8px 16px;
+  border-radius:20px;
+  cursor:pointer;
+  font-weight:bold;
+  transition:0.3s;
+}
+header button:hover{
+  background:var(--beige);
+  transform:translateY(-2px);
+}
+.main-container{
+  max-width:1200px;
+  margin:auto;
+  display:flex;
+  gap:20px;
+  padding:20px;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+.posts-container{
+  flex:0 1 600px;
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+}
+.admin-panel, .news-panel{
+  background:var(--beige);
+  padding:20px;
+  border-radius:12px;
+  box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+.admin-panel{
+  margin-bottom:20px;
+}
+.card{
+  background:var(--white);
+  border-radius:12px;
+  padding:15px;
+  box-shadow:0 5px 15px rgba(0,0,0,0.1);
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  max-width:600px;
+  margin:auto;
+}
+.card img{
+  width:100%;
+  border-radius:12px;
+  object-fit:cover;
+}
+.post-actions{
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+.comment{background:#eee;padding:6px;border-radius:6px;margin-top:6px;font-size:14px;}
+.comment-box{display:flex;gap:8px;align-items:center;margin-top:8px;}
+.comment-box input{flex:1;padding:6px;font-size:14px;}
+button.action-btn{
+  background:var(--dark);
+  color:white;
+  border:none;
+  padding:8px 14px;
+  border-radius:20px;
+  cursor:pointer;
+  font-size:14px;
+  font-weight:bold;
+  transition:0.3s;
+  box-shadow:0 4px 8px rgba(0,0,0,0.2);
+}
+button.action-btn:hover{
+  background:var(--hover);
+  transform:translateY(-2px);
+  box-shadow:0 6px 12px rgba(0,0,0,0.3);
+}
+.login-panel{
+  background:var(--white);
+  padding:25px;
+  border-radius:20px;
+  box-shadow:0 8px 20px rgba(0,0,0,0.2);
+  max-width:400px;
+  margin:auto;
+  margin-top:20px;
+  text-align:center;
+}
+.login-panel h3{
+  margin-bottom:20px;
+  color:var(--dark);
+}
+.login-panel input{
+  padding:12px;
+  margin-bottom:15px;
+  border-radius:12px;
+  border:1px solid #ccc;
+  width:80%;
+  font-size:16px;
+}
+.login-panel button{
+  width:60%;
+  padding:12px;
+  border-radius:20px;
+  border:none;
+  background:var(--dark);
+  color:white;
+  font-weight:bold;
+  font-size:16px;
+  cursor:pointer;
+  transition:0.3s;
+  box-shadow:0 4px 10px rgba(0,0,0,0.2);
+}
+.login-panel button:hover{
+  background:var(--hover);
+  transform:translateY(-2px);
+}
+.news-panel{
+  flex:0 1 250px;
+  height:max-content;
+}
+.news-panel h3{margin-top:0;}
+.news-list li{
+  margin-bottom:8px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  list-style-type: none;
+  position: relative;
+  padding-right: 12px;
+}
+.news-list li::before{
+  content:"●";
+  color:var(--dark);
+  position: absolute;
+  right:0;
+  font-size:14px;
+}
+.news-list li button{
+  background:var(--dark);
+  color:white;
+  border:none;
+  border-radius:12px;
+  padding:2px 8px;
+  font-size:12px;
+  cursor:pointer;
+  transition:0.2s;
+}
+.news-list li button:hover{
+  background:#c0392b;
+}
+.add-news{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  margin-top:10px;
+}
+.add-news input{
+  padding:8px;
+  border-radius:12px;
+  border:1px solid #ccc;
+}
+.add-news button{
+  background:var(--dark);
+  color:white;
+  border:none;
+  padding:8px;
+  border-radius:12px;
+  cursor:pointer;
+}
+.add-news button:hover{
+  background:var(--hover);
+}
+.hidden{display:none;}
+audio{width:100%; border-radius:8px;}
+@media(max-width:992px){
+  .main-container{flex-direction:column; align-items:center;}
+  .news-panel{order:-1; width:100%;}
+  .admin-panel, .posts-container{flex:1 1 100%;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div>نـبـض</div>
+  <button id="loginToggleBtn">تسجيل الدخول</button>
+</header>
+
+<div class="login-panel hidden" id="loginBox">
+<h3>تسجيل دخول الأدمن</h3>
+<input id="user" placeholder="اسم المستخدم">
+<input id="pass" type="password" placeholder="كلمة المرور">
+<button onclick="login()">دخول</button>
+</div>
+
+<div class="main-container">
+  <div class="posts-container" id="postsContainer"></div>
+
+  <div class="news-panel">
+    <h3>أخبار عاجلة</h3>
+    <ul id="newsList" class="news-list"></ul>
+
+    <div class="add-news hidden" id="addNewsPanel">
+      <input type="text" id="newsText" placeholder="أدخل خبر عاجل...">
+      <button onclick="addNews()">إضافة الخبر</button>
+    </div>
+  </div>
+</div>
+
+<div class="admin-panel hidden" id="adminPanel">
+  <h3>إضافة منشور جديد</h3>
+  <textarea id="postText" placeholder="اكتب المنشور هنا..."></textarea>
+  <input type="file" id="postImage" accept="image/*">
+  <input type="file" id="postMusic" accept="audio/*">
+  <button id="uploadBtn">نشر</button>
+  <hr>
+  <h3>إضافة أدمن جديد</h3>
+  <input id="newUser" placeholder="اسم المستخدم">
+  <input id="newPass" placeholder="كلمة المرور">
+  <button onclick="addAdmin()">إضافة</button>
+</div>
+
+<script>
+const CLOUD_NAME="drqglqclz";
+const UPLOAD_PRESET="khursa";
+let selectedFile=null;
+let selectedMusic=null;
+let isAdmin=false;
+
+if(!localStorage.admins){localStorage.admins=JSON.stringify([{user:"admin",pass:"1234"}]);}
+if(!localStorage.posts){localStorage.posts="[]";}
+if(!localStorage.likes){localStorage.likes="{}";}
+if(!localStorage.news){localStorage.news="[]";}
+
+const loginBox=document.getElementById("loginBox");
+const addNewsPanel=document.getElementById("addNewsPanel");
+document.getElementById("loginToggleBtn").addEventListener("click",()=>{
+  loginBox.classList.toggle("hidden");
+  if(isAdmin){
+    isAdmin=false;
+    document.getElementById("adminPanel").classList.add("hidden");
+    loginBox.classList.add("hidden");
+    addNewsPanel.classList.add("hidden");
+    document.getElementById("loginToggleBtn").innerText="تسجيل الدخول";
+  }
+});
+
+function login(){
+  let u=document.getElementById("user").value.trim();
+  let p=document.getElementById("pass").value.trim();
+  let admins=JSON.parse(localStorage.admins);
+  let ok=admins.find(a=>a.user===u && a.pass===p);
+  if(ok){
+    isAdmin=true;
+    document.getElementById("adminPanel").classList.remove("hidden");
+    loginBox.classList.add("hidden");
+    addNewsPanel.classList.remove("hidden");
+    document.getElementById("loginToggleBtn").innerText="تسجيل الخروج";
+    showPosts();
+    showNews();
+  }else{alert("اسم المستخدم أو كلمة المرور خاطئة");}
+}
+
+function addAdmin(){
+  let u=document.getElementById("newUser").value.trim();
+  let p=document.getElementById("newPass").value.trim();
+  if(!u || !p){alert("املأ البيانات"); return;}
+  let admins=JSON.parse(localStorage.admins);
+  admins.push({user:u,pass:p});
+  localStorage.admins=JSON.stringify(admins);
+  alert("تمت إضافة الأدمن");
+}
+
+document.getElementById("postImage").addEventListener("change", function(e){
+  if(!isAdmin){alert("يجب تسجيل الدخول كأدمن أولاً."); this.value=""; return;}
+  selectedFile = e.target.files[0];
+});
+document.getElementById("postMusic").addEventListener("change", function(e){
+  if(!isAdmin){alert("يجب تسجيل الدخول كأدمن أولاً."); this.value=""; return;}
+  selectedMusic = e.target.files[0];
+});
+
+async function uploadFile(file, type){
+  let url=`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/${type}/upload`;
+  let formData=new FormData();
+  formData.append("file",file);
+  formData.append("upload_preset",UPLOAD_PRESET);
+  let res=await fetch(url,{method:"POST",body:formData});
+  let data=await res.json();
+  return data.secure_url;
+}
+
+async function addPost(){
+  let text=document.getElementById("postText").value.trim();
+  if(!text){alert("اكتب المنشور"); return;}
+  let imgUrl="", musicUrl="";
+  if(selectedFile){ imgUrl=await uploadFile(selectedFile,"image"); selectedFile=null; document.getElementById("postImage").value=""; }
+  if(selectedMusic){ musicUrl=await uploadFile(selectedMusic,"video"); selectedMusic=null; document.getElementById("postMusic").value=""; }
+  let posts=JSON.parse(localStorage.posts);
+  posts.unshift({text,img:imgUrl,comments:[],id:Date.now(),music:musicUrl,likes:0});
+  localStorage.posts=JSON.stringify(posts);
+  document.getElementById("postText").value="";
+  showPosts();
+}
+
+document.getElementById("uploadBtn").addEventListener("click", addPost);
+
+function deletePost(id){
+  let posts=JSON.parse(localStorage.posts);
+  posts=posts.filter(p=>p.id!==id);
+  localStorage.posts=JSON.stringify(posts);
+  let likes=JSON.parse(localStorage.likes);
+  delete likes[id];
+  localStorage.likes=JSON.stringify(likes);
+  showPosts();
+}
+
+function toggleLike(id){
+  let likes=JSON.parse(localStorage.likes);
+  if(likes[id]){ delete likes[id]; } else { likes[id]=true; }
+  localStorage.likes=JSON.stringify(likes);
+  let posts=JSON.parse(localStorage.posts);
+  let post=posts.find(p=>p.id===id);
+  post.likes = likes[id]?1:0;
+  localStorage.posts=JSON.stringify(posts);
+  showPosts();
+}
+
+function addComment(id){
+  let input=document.getElementById("comment"+id);
+  if(!input.value.trim()) return;
+  let posts=JSON.parse(localStorage.posts);
+  let post=posts.find(p=>p.id===id);
+  post.comments.push(input.value.trim());
+  localStorage.posts=JSON.stringify(posts);
+  showPosts();
+}
+
+function showPosts(){
+  let posts=JSON.parse(localStorage.posts);
+  let likes=JSON.parse(localStorage.likes);
+  let container=document.getElementById("postsContainer");
+  container.innerHTML="";
+  posts.forEach(p=>{
+    let commentsHTML="";
+    p.comments.forEach(c=>{
+      commentsHTML+=`<div class="comment">${c}</div>`;
+    });
+    let liked = likes[p.id]?'❤️':'🤍';
+    container.innerHTML+=`
+      <div class="card">
+        <p>${p.text}</p>
+        ${p.img?`<img src="${p.img}">`:""}
+        ${p.music?`<audio controls src="${p.music}"></audio>`:""}
+        <div class="post-actions">
+          <button class="action-btn" onclick="toggleLike(${p.id})">${liked} ${p.likes||0}</button>
+          ${isAdmin?`<button class="action-btn" onclick="deletePost(${p.id})">حذف</button>`:""}
+        </div>
+        <div class="comment-box">
+          <input id="comment${p.id}" placeholder="اكتب تعليق">
+          <button class="action-btn" onclick="addComment(${p.id})">تعليق</button>
+        </div>
+        ${commentsHTML}
+      </div>
+    `;
+  });
+}
+
+function addNews(){
+  let text=document.getElementById("newsText").value.trim();
+  if(!text) return;
+  let news=JSON.parse(localStorage.news);
+  news.unshift(text);
+  localStorage.news=JSON.stringify(news);
+  document.getElementById("newsText").value="";
+  showNews();
+}
+
+function deleteNews(index){
+  let news=JSON.parse(localStorage.news);
+  news.splice(index,1);
+  localStorage.news=JSON.stringify(news);
+  showNews();
+}
+
+function showNews(){
+  let news=JSON.parse(localStorage.news);
+  let list=document.getElementById("newsList");
+  list.innerHTML="";
+  news.forEach((n,i)=>{
+    let deleteBtn = isAdmin?`<button onclick="deleteNews(${i})">حذف</button>`:"";
+    list.innerHTML+=`<li>${n} ${deleteBtn}</li>`;
+  });
+}
+
+showPosts();
+showNews();
+</script>
+
+</body>
+</html>
