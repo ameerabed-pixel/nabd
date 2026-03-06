@@ -14,207 +14,40 @@
   --hover:#2c3145;
 }
 *{box-sizing:border-box;}
-body{
-  margin:0;
-  font-family:'Segoe UI',Tahoma,sans-serif;
-  background:var(--light);
-  color:var(--dark);
-  direction:rtl;
-}
-header{
-  background:var(--dark);
-  color:white;
-  padding:15px 20px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  font-size:22px;
-  position:sticky;
-  top:0;
-  z-index:1000;
-  box-shadow:0 4px 12px rgba(0,0,0,0.2);
-}
-header button{
-  background:var(--blue);
-  color:var(--dark);
-  border:none;
-  padding:8px 16px;
-  border-radius:20px;
-  cursor:pointer;
-  font-weight:bold;
-  transition:0.3s;
-}
-header button:hover{
-  background:var(--beige);
-  transform:translateY(-2px);
-}
-.main-container{
-  max-width:1200px;
-  margin:auto;
-  display:flex;
-  gap:20px;
-  padding:20px;
-  flex-wrap:wrap;
-  justify-content:center;
-}
-.posts-container{
-  flex:0 1 600px;
-  display:flex;
-  flex-direction:column;
-  gap:20px;
-}
-.admin-panel, .news-panel{
-  background:var(--beige);
-  padding:20px;
-  border-radius:12px;
-  box-shadow:0 5px 15px rgba(0,0,0,0.1);
-}
-.admin-panel{
-  margin-bottom:20px;
-}
-.card{
-  background:var(--white);
-  border-radius:12px;
-  padding:15px;
-  box-shadow:0 5px 15px rgba(0,0,0,0.1);
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-  max-width:600px;
-  margin:auto;
-}
-.card img{
-  width:100%;
-  border-radius:12px;
-  object-fit:cover;
-}
-.post-actions{
-  display:flex;
-  gap:10px;
-  align-items:center;
-}
+body{margin:0;font-family:'Segoe UI',Tahoma,sans-serif;background:var(--light);color:var(--dark);direction:rtl;}
+header{background:var(--dark);color:white;padding:15px 20px;display:flex;justify-content:space-between;align-items:center;font-size:22px;position:sticky;top:0;z-index:1000;box-shadow:0 4px 12px rgba(0,0,0,0.2);}
+header button{background:var(--blue);color:var(--dark);border:none;padding:8px 16px;border-radius:20px;cursor:pointer;font-weight:bold;transition:0.3s;}
+header button:hover{background:var(--beige);transform:translateY(-2px);}
+.main-container{max-width:1200px;margin:auto;display:flex;gap:20px;padding:20px;flex-wrap:wrap;justify-content:center;}
+.posts-container{flex:0 1 600px;display:flex;flex-direction:column;gap:20px;}
+.admin-panel, .news-panel{background:var(--beige);padding:20px;border-radius:12px;box-shadow:0 5px 15px rgba(0,0,0,0.1);}
+.admin-panel{margin-bottom:20px;}
+.card{background:var(--white);border-radius:12px;padding:15px;box-shadow:0 5px 15px rgba(0,0,0,0.1);display:flex;flex-direction:column;gap:10px;max-width:600px;margin:auto;}
+.card img{width:100%;border-radius:12px;object-fit:cover;}
+.post-actions{display:flex;gap:10px;align-items:center;}
 .comment{background:#eee;padding:6px;border-radius:6px;margin-top:6px;font-size:14px;}
 .comment-box{display:flex;gap:8px;align-items:center;margin-top:8px;}
 .comment-box input{flex:1;padding:6px;font-size:14px;}
-button.action-btn{
-  background:var(--dark);
-  color:white;
-  border:none;
-  padding:8px 14px;
-  border-radius:20px;
-  cursor:pointer;
-  font-size:14px;
-  font-weight:bold;
-  transition:0.3s;
-  box-shadow:0 4px 8px rgba(0,0,0,0.2);
-}
-button.action-btn:hover{
-  background:var(--hover);
-  transform:translateY(-2px);
-  box-shadow:0 6px 12px rgba(0,0,0,0.3);
-}
-.login-panel{
-  background:var(--white);
-  padding:25px;
-  border-radius:20px;
-  box-shadow:0 8px 20px rgba(0,0,0,0.2);
-  max-width:400px;
-  margin:auto;
-  margin-top:20px;
-  text-align:center;
-}
-.login-panel h3{
-  margin-bottom:20px;
-  color:var(--dark);
-}
-.login-panel input{
-  padding:12px;
-  margin-bottom:15px;
-  border-radius:12px;
-  border:1px solid #ccc;
-  width:80%;
-  font-size:16px;
-}
-.login-panel button{
-  width:60%;
-  padding:12px;
-  border-radius:20px;
-  border:none;
-  background:var(--dark);
-  color:white;
-  font-weight:bold;
-  font-size:16px;
-  cursor:pointer;
-  transition:0.3s;
-  box-shadow:0 4px 10px rgba(0,0,0,0.2);
-}
-.login-panel button:hover{
-  background:var(--hover);
-  transform:translateY(-2px);
-}
-.news-panel{
-  flex:0 1 250px;
-  height:max-content;
-}
+button.action-btn{background:var(--dark);color:white;border:none;padding:8px 14px;border-radius:20px;cursor:pointer;font-size:14px;font-weight:bold;transition:0.3s;box-shadow:0 4px 8px rgba(0,0,0,0.2);}
+button.action-btn:hover{background:var(--hover);transform:translateY(-2px);box-shadow:0 6px 12px rgba(0,0,0,0.3);}
+.login-panel{background:var(--white);padding:25px;border-radius:20px;box-shadow:0 8px 20px rgba(0,0,0,0.2);max-width:400px;margin:auto;margin-top:20px;text-align:center;}
+.login-panel h3{margin-bottom:20px;color:var(--dark);}
+.login-panel input{padding:12px;margin-bottom:15px;border-radius:12px;border:1px solid #ccc;width:80%;font-size:16px;}
+.login-panel button{width:60%;padding:12px;border-radius:20px;border:none;background:var(--dark);color:white;font-weight:bold;font-size:16px;cursor:pointer;transition:0.3s;box-shadow:0 4px 10px rgba(0,0,0,0.2);}
+.login-panel button:hover{background:var(--hover);transform:translateY(-2px);}
+.news-panel{flex:0 1 250px;height:max-content;}
 .news-panel h3{margin-top:0;}
-.news-list li{
-  margin-bottom:8px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  list-style-type: none;
-  position: relative;
-  padding-right: 12px;
-}
-.news-list li::before{
-  content:"●";
-  color:var(--dark);
-  position: absolute;
-  right:0;
-  font-size:14px;
-}
-.news-list li button{
-  background:var(--dark);
-  color:white;
-  border:none;
-  border-radius:12px;
-  padding:2px 8px;
-  font-size:12px;
-  cursor:pointer;
-  transition:0.2s;
-}
-.news-list li button:hover{
-  background:#c0392b;
-}
-.add-news{
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-  margin-top:10px;
-}
-.add-news input{
-  padding:8px;
-  border-radius:12px;
-  border:1px solid #ccc;
-}
-.add-news button{
-  background:var(--dark);
-  color:white;
-  border:none;
-  padding:8px;
-  border-radius:12px;
-  cursor:pointer;
-}
-.add-news button:hover{
-  background:var(--hover);
-}
+.news-list li{margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;list-style-type:none;position:relative;padding-right:12px;}
+.news-list li::before{content:"●";color:var(--dark);position:absolute;right:0;font-size:14px;}
+.news-list li button{background:var(--dark);color:white;border:none;border-radius:12px;padding:2px 8px;font-size:12px;cursor:pointer;transition:0.2s;}
+.news-list li button:hover{background:#c0392b;}
+.add-news{display:flex;flex-direction:column;gap:8px;margin-top:10px;}
+.add-news input{padding:8px;border-radius:12px;border:1px solid #ccc;}
+.add-news button{background:var(--dark);color:white;border:none;padding:8px;border-radius:12px;cursor:pointer;}
+.add-news button:hover{background:var(--hover);}
 .hidden{display:none;}
-audio{width:100%; border-radius:8px;}
-@media(max-width:992px){
-  .main-container{flex-direction:column; align-items:center;}
-  .news-panel{order:-1; width:100%;}
-  .admin-panel, .posts-container{flex:1 1 100%;}
-}
+audio{width:100%;border-radius:8px;}
+@media(max-width:992px){.main-container{flex-direction:column;align-items:center;}.news-panel{order:-1;width:100%;}.admin-panel,.posts-container{flex:1 1 100%;}}
 </style>
 </head>
 <body>
@@ -225,8 +58,8 @@ audio{width:100%; border-radius:8px;}
 </header>
 
 <div class="login-panel hidden" id="loginBox">
-<h3>تسجيل دخول الأدمن</h3>
-<input id="user" placeholder="اسم المستخدم">
+<h3>تسجيل دخول المستخدمين</h3>
+<input id="user" placeholder="البريد الإلكتروني">
 <input id="pass" type="password" placeholder="كلمة المرور">
 <button onclick="login()">دخول</button>
 </div>
@@ -253,29 +86,47 @@ audio{width:100%; border-radius:8px;}
   <button id="uploadBtn">نشر</button>
   <hr>
   <h3>إضافة أدمن جديد</h3>
-  <input id="newUser" placeholder="اسم المستخدم">
+  <input id="newUser" placeholder="البريد الإلكتروني">
   <input id="newPass" placeholder="كلمة المرور">
   <button onclick="addAdmin()">إضافة</button>
 </div>
 
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
 <script>
+const firebaseConfig = {
+  apiKey: "AIzaSyCIZg8E-vsqV5k1xWwM3SohZb8A-dJDxm8",
+  authDomain: "khursa-5a8ea.firebaseapp.com",
+  databaseURL: "https://khursa-5a8ea-default-rtdb.firebaseio.com",
+  projectId: "khursa-5a8ea",
+  storageBucket: "khursa-5a8ea.firebasestorage.app",
+  messagingSenderId: "212197121646",
+  appId: "1:212197121646:web:01c63ede18ba9f63bd507f",
+  measurementId: "G-1BWDFLWEMB"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+// Cloudinary
 const CLOUD_NAME="drqglqclz";
 const UPLOAD_PRESET="khursa";
+
 let selectedFile=null;
 let selectedMusic=null;
+let currentUser=null;
 let isAdmin=false;
-
-if(!localStorage.admins){localStorage.admins=JSON.stringify([{user:"admin",pass:"1234"}]);}
-if(!localStorage.posts){localStorage.posts="[]";}
-if(!localStorage.likes){localStorage.likes="{}";}
-if(!localStorage.news){localStorage.news="[]";}
 
 const loginBox=document.getElementById("loginBox");
 const addNewsPanel=document.getElementById("addNewsPanel");
+
 document.getElementById("loginToggleBtn").addEventListener("click",()=>{
   loginBox.classList.toggle("hidden");
-  if(isAdmin){
-    isAdmin=false;
+  if(currentUser && isAdmin){
+    currentUser=null;
     document.getElementById("adminPanel").classList.add("hidden");
     loginBox.classList.add("hidden");
     addNewsPanel.classList.add("hidden");
@@ -283,42 +134,42 @@ document.getElementById("loginToggleBtn").addEventListener("click",()=>{
   }
 });
 
+// تسجيل دخول
 function login(){
-  let u=document.getElementById("user").value.trim();
-  let p=document.getElementById("pass").value.trim();
-  let admins=JSON.parse(localStorage.admins);
-  let ok=admins.find(a=>a.user===u && a.pass===p);
-  if(ok){
-    isAdmin=true;
-    document.getElementById("adminPanel").classList.remove("hidden");
-    loginBox.classList.add("hidden");
-    addNewsPanel.classList.remove("hidden");
-    document.getElementById("loginToggleBtn").innerText="تسجيل الخروج";
-    showPosts();
-    showNews();
-  }else{alert("اسم المستخدم أو كلمة المرور خاطئة");}
+  let email=document.getElementById("user").value.trim();
+  let pass=document.getElementById("pass").value.trim();
+  auth.signInWithEmailAndPassword(email, pass)
+  .then((cred)=>{
+    currentUser = cred.user;
+    db.collection("admins").doc(currentUser.uid).get().then(doc=>{
+      isAdmin = doc.exists;
+      if(isAdmin){
+        document.getElementById("adminPanel").classList.remove("hidden");
+        addNewsPanel.classList.remove("hidden");
+      }
+      loginBox.classList.add("hidden");
+      document.getElementById("loginToggleBtn").innerText="تسجيل الخروج";
+      showPosts();
+      showNews();
+    });
+  })
+  .catch(err=>{alert(err.message)});
 }
 
-function addAdmin(){
-  let u=document.getElementById("newUser").value.trim();
-  let p=document.getElementById("newPass").value.trim();
-  if(!u || !p){alert("املأ البيانات"); return;}
-  let admins=JSON.parse(localStorage.admins);
-  admins.push({user:u,pass:p});
-  localStorage.admins=JSON.stringify(admins);
-  alert("تمت إضافة الأدمن");
-}
-
-document.getElementById("postImage").addEventListener("change", function(e){
-  if(!isAdmin){alert("يجب تسجيل الدخول كأدمن أولاً."); this.value=""; return;}
-  selectedFile = e.target.files[0];
-});
-document.getElementById("postMusic").addEventListener("change", function(e){
-  if(!isAdmin){alert("يجب تسجيل الدخول كأدمن أولاً."); this.value=""; return;}
-  selectedMusic = e.target.files[0];
+// تسجيل الخروج
+document.getElementById("loginToggleBtn").addEventListener("click",()=>{
+  if(currentUser){
+    auth.signOut();
+    currentUser=null;
+    isAdmin=false;
+    document.getElementById("adminPanel").classList.add("hidden");
+    addNewsPanel.classList.add("hidden");
+    document.getElementById("loginToggleBtn").innerText="تسجيل الدخول";
+  }
 });
 
-async function uploadFile(file, type){
+// رفع الملفات على Cloudinary
+async function uploadFile(file,type){
   let url=`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/${type}/upload`;
   let formData=new FormData();
   formData.append("file",file);
@@ -328,106 +179,104 @@ async function uploadFile(file, type){
   return data.secure_url;
 }
 
-async function addPost(){
+// إضافة منشور
+document.getElementById("postImage").addEventListener("change",e=>{selectedFile=e.target.files[0];});
+document.getElementById("postMusic").addEventListener("change",e=>{selectedMusic=e.target.files[0];});
+
+document.getElementById("uploadBtn").addEventListener("click", async ()=>{
+  if(!currentUser){alert("يجب تسجيل الدخول"); return;}
   let text=document.getElementById("postText").value.trim();
   if(!text){alert("اكتب المنشور"); return;}
   let imgUrl="", musicUrl="";
-  if(selectedFile){ imgUrl=await uploadFile(selectedFile,"image"); selectedFile=null; document.getElementById("postImage").value=""; }
-  if(selectedMusic){ musicUrl=await uploadFile(selectedMusic,"video"); selectedMusic=null; document.getElementById("postMusic").value=""; }
-  let posts=JSON.parse(localStorage.posts);
-  posts.unshift({text,img:imgUrl,comments:[],id:Date.now(),music:musicUrl,likes:0});
-  localStorage.posts=JSON.stringify(posts);
+  if(selectedFile){ imgUrl=await uploadFile(selectedFile,"image"); selectedFile=null; document.getElementById("postImage").value="";}
+  if(selectedMusic){ musicUrl=await uploadFile(selectedMusic,"video"); selectedMusic=null; document.getElementById("postMusic").value="";}
+  db.collection("posts").add({
+    text:text,img:imgUrl,music:musicUrl,likes:[],comments:[],timestamp:firebase.firestore.FieldValue.serverTimestamp()
+  });
   document.getElementById("postText").value="";
-  showPosts();
-}
+});
 
-document.getElementById("uploadBtn").addEventListener("click", addPost);
-
-function deletePost(id){
-  let posts=JSON.parse(localStorage.posts);
-  posts=posts.filter(p=>p.id!==id);
-  localStorage.posts=JSON.stringify(posts);
-  let likes=JSON.parse(localStorage.likes);
-  delete likes[id];
-  localStorage.likes=JSON.stringify(likes);
-  showPosts();
-}
-
-function toggleLike(id){
-  let likes=JSON.parse(localStorage.likes);
-  if(likes[id]){ delete likes[id]; } else { likes[id]=true; }
-  localStorage.likes=JSON.stringify(likes);
-  let posts=JSON.parse(localStorage.posts);
-  let post=posts.find(p=>p.id===id);
-  post.likes = likes[id]?1:0;
-  localStorage.posts=JSON.stringify(posts);
-  showPosts();
-}
-
-function addComment(id){
-  let input=document.getElementById("comment"+id);
-  if(!input.value.trim()) return;
-  let posts=JSON.parse(localStorage.posts);
-  let post=posts.find(p=>p.id===id);
-  post.comments.push(input.value.trim());
-  localStorage.posts=JSON.stringify(posts);
-  showPosts();
-}
-
+// عرض المنشورات
 function showPosts(){
-  let posts=JSON.parse(localStorage.posts);
-  let likes=JSON.parse(localStorage.likes);
-  let container=document.getElementById("postsContainer");
-  container.innerHTML="";
-  posts.forEach(p=>{
-    let commentsHTML="";
-    p.comments.forEach(c=>{
-      commentsHTML+=`<div class="comment">${c}</div>`;
+  db.collection("posts").orderBy("timestamp","desc").onSnapshot(snapshot=>{
+    let container=document.getElementById("postsContainer");
+    container.innerHTML="";
+    snapshot.forEach(doc=>{
+      let p = doc.data();
+      let liked = currentUser && p.likes.includes(currentUser.uid)?'❤️':'🤍';
+      let commentsHTML="";
+      p.comments.forEach(c=>{
+        commentsHTML+=`<div class="comment">${c}</div>`;
+      });
+      container.innerHTML+=`
+        <div class="card">
+          <p>${p.text}</p>
+          ${p.img?`<img src="${p.img}">`:""}
+          ${p.music?`<audio controls src="${p.music}"></audio>`:""}
+          <div class="post-actions">
+            <button class="action-btn" onclick="toggleLike('${doc.id}')">${liked} ${p.likes.length}</button>
+            ${isAdmin?`<button class="action-btn" onclick="deletePost('${doc.id}')">حذف</button>`:""}
+          </div>
+          <div class="comment-box">
+            <input id="comment${doc.id}" placeholder="اكتب تعليق">
+            <button class="action-btn" onclick="addComment('${doc.id}')">تعليق</button>
+          </div>
+          ${commentsHTML}
+        </div>
+      `;
     });
-    let liked = likes[p.id]?'❤️':'🤍';
-    container.innerHTML+=`
-      <div class="card">
-        <p>${p.text}</p>
-        ${p.img?`<img src="${p.img}">`:""}
-        ${p.music?`<audio controls src="${p.music}"></audio>`:""}
-        <div class="post-actions">
-          <button class="action-btn" onclick="toggleLike(${p.id})">${liked} ${p.likes||0}</button>
-          ${isAdmin?`<button class="action-btn" onclick="deletePost(${p.id})">حذف</button>`:""}
-        </div>
-        <div class="comment-box">
-          <input id="comment${p.id}" placeholder="اكتب تعليق">
-          <button class="action-btn" onclick="addComment(${p.id})">تعليق</button>
-        </div>
-        ${commentsHTML}
-      </div>
-    `;
   });
 }
 
+// حذف منشور
+function deletePost(id){db.collection("posts").doc(id).delete();}
+
+// لايك
+function toggleLike(id){
+  if(!currentUser){alert("سجل الدخول"); return;}
+  let postRef=db.collection("posts").doc(id);
+  postRef.get().then(doc=>{
+    let p = doc.data();
+    let likes=p.likes||[];
+    if(likes.includes(currentUser.uid)){
+      likes = likes.filter(u=>u!==currentUser.uid);
+    }else{likes.push(currentUser.uid);}
+    postRef.update({likes:likes});
+  });
+}
+
+// تعليق
+function addComment(id){
+  if(!currentUser){alert("سجل الدخول"); return;}
+  let input=document.getElementById("comment"+id);
+  if(!input.value.trim()) return;
+  let postRef=db.collection("posts").doc(id);
+  postRef.get().then(doc=>{
+    let comments=doc.data().comments||[];
+    comments.push(input.value.trim());
+    postRef.update({comments:comments});
+    input.value="";
+  });
+}
+
+// أخبار عاجلة
 function addNews(){
+  if(!currentUser || !isAdmin){alert("فقط الأدمن يمكن إضافة الأخبار"); return;}
   let text=document.getElementById("newsText").value.trim();
   if(!text) return;
-  let news=JSON.parse(localStorage.news);
-  news.unshift(text);
-  localStorage.news=JSON.stringify(news);
+  db.collection("news").add({text:text,timestamp:firebase.firestore.FieldValue.serverTimestamp()});
   document.getElementById("newsText").value="";
-  showNews();
 }
-
-function deleteNews(index){
-  let news=JSON.parse(localStorage.news);
-  news.splice(index,1);
-  localStorage.news=JSON.stringify(news);
-  showNews();
-}
-
+function deleteNews(id){db.collection("news").doc(id).delete();}
 function showNews(){
-  let news=JSON.parse(localStorage.news);
-  let list=document.getElementById("newsList");
-  list.innerHTML="";
-  news.forEach((n,i)=>{
-    let deleteBtn = isAdmin?`<button onclick="deleteNews(${i})">حذف</button>`:"";
-    list.innerHTML+=`<li>${n} ${deleteBtn}</li>`;
+  db.collection("news").orderBy("timestamp","desc").onSnapshot(snapshot=>{
+    let list=document.getElementById("newsList");
+    list.innerHTML="";
+    snapshot.forEach(doc=>{
+      let n=doc.data();
+      let deleteBtn=isAdmin?`<button onclick="deleteNews('${doc.id}')">حذف</button>`:"";
+      list.innerHTML+=`<li>${n.text} ${deleteBtn}</li>`;
+    });
   });
 }
 
