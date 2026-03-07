@@ -6,6 +6,181 @@
 <title>نـبـض</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
+  
+  #profileStoryWrapper img {
+    
+  transition: 0.2s;
+}
+#profileStoryWrapper img:hover {
+  transform: scale(1.05);
+}
+  #mainHeader {
+  width: 100%;
+  background: #E1D9BC; /* أزرق فاتح مناسب مع ألوان الموقع */
+  height: 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  color: #30364F; /* لون نص داكن للقراءة */
+  border-bottom: 2px solid #E1D9BC; /* خط خفيف أسفل الهيدر لمزيد من الأناقة */
+}
+  .storyCircle{
+  width:60px;
+  height:60px;
+  border-radius:50%;
+  border:3px solid #ACBAC4;
+  object-fit:cover;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+.storyCircle:hover{
+  transform:scale(1.1);
+}
+  .hidden{
+display:none !important;
+}
+.storyThumb{
+  width:60px;
+  height:60px;
+  border-radius:50%;
+  object-fit:cover;
+  cursor:pointer;
+  border:3px solid #ACBAC4;
+}
+/* صندوق البروفايل */
+
+.profile-box{
+position:fixed;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+background:white;
+width:750px;
+max-height:90vh;
+overflow:auto;
+padding:20px;
+border-radius:14px;
+box-shadow:0 10px 30px rgba(0,0,0,0.3);
+z-index:2000;
+}
+
+/* رأس البروفايل */
+
+.profile-header{
+text-align:center;
+margin-bottom:20px;
+position:relative;
+}
+
+.profile-header img{
+width:90px;
+height:90px;
+border-radius:50%;
+object-fit:cover;
+}
+
+.close-profile{
+position:absolute;
+top:0;
+left:0;
+background:#30364F;
+color:white;
+border:none;
+padding:6px 14px;
+border-radius:20px;
+cursor:pointer;
+}
+
+/* شبكة المنشورات */
+
+.profile-posts{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:8px;
+}
+
+/* منشور صغير */
+
+.profile-post{
+position:relative;
+cursor:pointer;
+}
+
+.profile-post img{
+width:100%;
+height:130px;
+object-fit:cover;
+border-radius:8px;
+transition:0.2s;
+}
+
+.profile-post:hover img{
+transform:scale(1.05);
+}
+
+/* نافذة عرض المنشور */
+
+.post-view{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.9);
+display:flex;
+align-items:center;
+justify-content:center;
+z-index:3000;
+}
+
+/* محتوى المنشور */
+
+.viewer-content{
+position:relative;
+max-width:80%;
+max-height:80%;
+}
+
+.viewer-content img{
+width:100%;
+max-height:80vh;
+object-fit:contain;
+border-radius:12px;
+}
+
+/* النص فوق الصورة */
+
+.viewer-text{
+position:absolute;
+bottom:0;
+width:100%;
+background:linear-gradient(transparent,rgba(0,0,0,0.8));
+color:white;
+padding:20px;
+border-radius:0 0 12px 12px;
+font-size:18px;
+}
+
+/* زر اغلاق */
+
+.viewer-close{
+position:absolute;
+top:-40px;
+left:0;
+background:white;
+border:none;
+padding:6px 12px;
+border-radius:20px;
+cursor:pointer;
+
+}
+
 :root{
   --dark:#30364F;
   --blue:#ACBAC4;
@@ -96,8 +271,50 @@ audio{width:100%;border-radius:8px;}
 .admin-panel { margin-top:20px; } /* مسافة بين المنشورات ولوحة الإضافة */
 </style>
 </head>
-<body>
 
+<div id="profileBox" class="profile-box hidden">
+
+<div class="profile-header">
+
+<button class="close-profile" onclick="closeProfile()">✖</button>
+
+<img id="profileImage">
+
+<h3 id="profileUsername"></h3>
+
+<button id="followBtn" class="action-btn"></button>
+
+<div style="margin-top:10px">
+
+<span id="followersCount">0</span> متابع •
+<span id="followingCount">0</span> يتابع
+
+</div>
+<input type="file" id="storyFile" style="display:none;">
+</div>
+
+<div id="profilePosts" class="profile-posts"></div>
+
+</div>
+
+<div id="profilePosts" class="profile-posts"></div>
+
+</div>
+<div id="postViewer" class="post-view hidden">
+
+<div class="viewer-content">
+
+<button class="viewer-close" onclick="closeViewer()">إغلاق</button>
+
+<img id="viewerImage">
+
+<div id="viewerText" class="viewer-text"></div>
+
+</div>
+
+</div>
+
+<body>
 <header>
   <div>نـبـض</div>
   <div>
@@ -106,7 +323,40 @@ audio{width:100%;border-radius:8px;}
     <button id="logoutBtn" class="hidden"><i class="fa-solid fa-right-from-bracket"></i> تسجيل الخروج</button>
   </div>
 </header>
+<header id="mainHeader">
+  
+  <div id="profileStoryWrapper" style="display:flex;align-items:center;gap:10px;margin:10px;">
+  <!-- صورة البروفايل -->
+  <img id="myProfilePic" src="https://i.pravatar.cc/60" 
+       style="width:60px;height:60px;border-radius:50%;border:3px solid #ACBAC4;cursor:pointer;object-fit:cover;">
 
+  <div id="storyContainer" style="display:flex;gap:10px;overflow-x:auto;padding:10px;background:#f0f0db;border-radius:12px;">
+  <!-- ستوريز ديناميكياً -->
+</div>
+
+<!-- نافذة عرض الستوري -->
+<div id="storyViewer" class="hidden" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);display:flex;justify-content:center;align-items:center;z-index:10000;">
+  <div style="position:relative;width:80%;max-width:600px;">
+    <button onclick="closeStory()" style="position:absolute;top:-40px;right:0;background:white;padding:6px 12px;border-radius:20px;cursor:pointer;">إغلاق</button>
+    <img id="storyImage" style="width:100%;max-height:80vh;border-radius:12px;object-fit:contain;">
+    <div id="storyText" style="position:absolute;bottom:0;width:100%;background:linear-gradient(transparent,rgba(0,0,0,0.8));color:white;padding:20px;border-radius:0 0 12px 12px;"></div>
+    <button id="prevStoryBtn" style="position:absolute;top:50%;left:-50px;background:white;padding:6px 12px;border-radius:20px;cursor:pointer;">⟨</button>
+    <button id="nextStoryBtn" style="position:absolute;top:50%;right:-50px;background:white;padding:6px 12px;border-radius:20px;cursor:pointer;">⟩</button>
+  </div>
+</div>
+</div>
+
+<!-- نافذة عرض الستوري -->
+<div id="storyViewer" class="post-view hidden" style="background:rgba(0,0,0,0.9);align-items:center;justify-content:center;display:flex;">
+  <div style="position:relative;max-width:80%;max-height:80%;">
+    <button onclick="closeStory()" style="position:absolute;top:-40px;left:0;background:white;padding:6px 12px;border-radius:20px;cursor:pointer;">إغلاق</button>
+    <img id="storyImage" style="width:100%;max-height:80vh;border-radius:12px;object-fit:contain;">
+    <div id="storyText" style="position:absolute;bottom:0;width:100%;background:linear-gradient(transparent,rgba(0,0,0,0.8));color:white;padding:20px;border-radius:0 0 12px 12px;"></div>
+  </div>
+</div>
+  <div id="leftContent">
+    <input id="searchUser" placeholder="بحث عن مستخدم" style="padding:6px;border-radius:10px;border:none">
+  </div></header>
 <!-- لوحة تسجيل الدخول / إنشاء حساب -->
 <div class="login-panel hidden" id="loginBox">
   <h3><i class="fa-solid fa-user-shield"></i> تسجيل دخول / إنشاء حساب</h3>
@@ -159,6 +409,289 @@ audio{width:100%;border-radius:8px;}
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
 <script>
+  
+
+  
+  function openProfile(userId){
+  // تحقق من أن لديك معرف المستخدم
+  if(!userId) return;
+
+  // أظهر نافذة البروفايل
+  const profileBox = document.getElementById("profileBox");
+  if(profileBox){
+    profileBox.classList.remove("hidden");
+  }
+
+  // جلب بيانات المستخدم من Firebase
+  firebase.database().ref("users/"+userId).once("value").then(snapshot=>{
+    const data = snapshot.val();
+    if(data){
+      document.getElementById("profileName").innerText = data.username || "مستخدم";
+      document.getElementById("profilePicLarge").src = data.profile || "https://i.pravatar.cc/100";
+      
+      // عرض منشورات المستخدم
+      showUserPosts(userId);
+    }
+  });
+}
+
+// مثال لدالة عرض منشورات المستخدم
+function showUserPosts(userId){
+  const container = document.getElementById("profilePostsContainer");
+  container.innerHTML = ""; // مسح القديم
+  firebase.database().ref("posts").orderByChild("userId").equalTo(userId).once("value").then(snapshot=>{
+    snapshot.forEach(post=>{
+      const p = post.val();
+      container.innerHTML += `<div class="card"><p>${p.text}</p></div>`;
+    });
+  });
+}
+const profilePic = document.getElementById("myProfilePic");
+const storyFile = document.getElementById("storyFile");
+
+let pressTimer = null;
+let longPress = false;
+
+// عند الضغط على صورة البروفايل
+profilePic.addEventListener("mousedown", () => {
+  longPress = false;
+  pressTimer = setTimeout(() => {
+    longPress = true;
+    storyFile.click(); // فتح اختيار ملف لنشر ستوري
+  }, 700); // الضغط المطول 700ms
+});
+
+profilePic.addEventListener("mouseup", () => {
+  clearTimeout(pressTimer);
+});
+
+profilePic.addEventListener("mouseleave", () => {
+  clearTimeout(pressTimer);
+});
+
+// الضغط القصير
+profilePic.addEventListener("click", () => {
+  if (!longPress) {
+    openProfile(currentUser.uid); // فتح البروفايل
+  }
+});
+
+
+// اختيار ملف الستوري
+storyFile.addEventListener("change", async function(e){
+  const file = e.target.files[0];
+  if(!file) return;
+  const url = await uploadFile(file, "image"); // استخدم دالتك uploadFile الموجودة عندك
+  await addStory(currentUser.uid, url, "ستوري جديد"); // دالة addStory كما سبق
+});
+  function pickStoryFile(){
+  document.getElementById("storyFile").click();
+}
+
+document.getElementById("storyFile").addEventListener("change", async function(e){
+  const file = e.target.files[0];
+  if(!file) return;
+  const url = await uploadFile(file,"image"); // دالة uploadFile الموجودة عندك
+  await addStory(currentUser.uid,url,"ستوري جديد");
+});
+  // إضافة ستوري جديد
+async function addStory(userId,img,text){
+  const id=Date.now();
+  await firebase.database().ref("stories/"+id).set({
+    userId:userId,
+    img:img,
+    text:text,
+    date:id
+  });
+  showStories();
+}
+
+
+
+  document.getElementById("searchUser").addEventListener("input",async function(){
+
+let value=this.value.trim();
+
+let results=document.getElementById("searchResults");
+
+results.innerHTML="";
+
+if(!value) return;
+
+let snap=await firebase.database().ref("users").once("value");
+
+snap.forEach(user=>{
+
+let u=user.val();
+
+if(u.username.toLowerCase().includes(value.toLowerCase())){
+
+let div=document.createElement("div");
+
+div.innerHTML=`
+<img src="${u.profile||'https://i.pravatar.cc/40'}" width="30" style="border-radius:50%">
+${u.username}
+`;
+
+div.style.cursor="pointer";
+
+div.onclick=()=>{
+
+showProfile(user.key);
+
+results.innerHTML="";
+
+};
+
+results.appendChild(div);
+
+}
+
+});
+
+});
+  async function followUser(userId){
+  if(!currentUser) return alert("يجب تسجيل الدخول");
+
+  const myId = currentUser.uid;
+
+  // المرجع للمتابعين
+  const followerRef = firebase.database().ref("follows/"+userId+"/followers/"+myId);
+  const followingRef = firebase.database().ref("follows/"+myId+"/following/"+userId);
+
+  const snap = await followerRef.once("value");
+
+  if(snap.exists()){
+    // إزالة المتابعة
+    await followerRef.remove();
+    await followingRef.remove();
+  } else {
+    // إضافة المتابعة
+    await followerRef.set(true);
+    await followingRef.set(true);
+  }
+
+  // تحديث الزر والعداد
+  updateFollowButton(userId);
+  updateFollowCounts(userId);
+}
+async function updateFollowButton(userId){
+  const btn = document.getElementById("followBtn");
+
+  if(!currentUser || currentUser.uid === userId){
+    btn.style.display = "none";
+    return;
+  }
+
+  btn.style.display = "inline-block";
+
+  const snap = await firebase.database()
+    .ref("follows/"+userId+"/followers/"+currentUser.uid)
+    .once("value");
+
+  btn.innerText = snap.exists() ? "إلغاء المتابعة" : "متابعة";
+
+  btn.onclick = () => followUser(userId);
+}
+async function updateFollowCounts(userId){
+  const followersSnap = await firebase.database()
+    .ref("follows/"+userId+"/followers")
+    .once("value");
+
+  const followingSnap = await firebase.database()
+    .ref("follows/"+userId+"/following")
+    .once("value");
+
+  document.getElementById("followersCount").innerText =
+    followersSnap.exists() ? Object.keys(followersSnap.val()).length : 0;
+
+  document.getElementById("followingCount").innerText =
+    followingSnap.exists() ? Object.keys(followingSnap.val()).length : 0;
+}
+
+  async function showProfile(userId){
+
+const profileBox=document.getElementById("profileBox");
+const profileImage=document.getElementById("profileImage");
+const profileUsername=document.getElementById("profileUsername");
+const profilePosts=document.getElementById("profilePosts");
+
+profilePosts.innerHTML="";
+
+let userSnap=await firebase.database().ref("users/"+userId).once("value");
+
+if(!userSnap.exists()) return;
+
+let user=userSnap.val();
+
+profileImage.src=user.profile || "https://i.pravatar.cc/100";
+profileUsername.innerText=user.username;
+
+let postsSnap=await firebase.database().ref("posts").orderByChild("userId").equalTo(userId).once("value");
+
+if(postsSnap.exists()){
+
+let posts=[];
+
+postsSnap.forEach(p=>{
+posts.push(p.val());
+});
+
+posts.sort((a,b)=>b.date-a.date);
+
+posts.forEach(p=>{
+
+if(p.img){
+
+let div=document.createElement("div");
+div.className="profile-post";
+
+div.innerHTML=`<img src="${p.img}">`;
+
+div.onclick=()=>{
+openViewer(p.img,p.text);
+};
+
+profilePosts.appendChild(div);
+}
+profileBox.classList.remove("hidden");
+updateFollowButton(userId);
+updateFollowCounts(userId);
+
+});
+
+}else{
+
+profilePosts.innerHTML="<p>لا توجد منشورات</p>";
+
+}
+
+profileBox.classList.remove("hidden");
+
+}
+
+function openViewer(img,text){
+
+document.getElementById("viewerImage").src=img;
+
+document.getElementById("viewerText").textContent=text;
+
+document.getElementById("postViewer").classList.remove("hidden");
+
+}
+
+function closeProfile(){
+
+let box = document.getElementById("profileBox");
+
+if(box){
+box.classList.add("hidden");
+}
+
+
+
+}
+
 const firebaseConfig = {
   apiKey: "AIzaSyCIZg8E-vsqV5k1xWwM3SohZb8A-dJDxm8",
   authDomain: "khursa-5a8ea.firebaseapp.com",
@@ -169,12 +702,16 @@ const firebaseConfig = {
   appId: "1:212197121646:web:01c63ede18ba9f63bd507f",
   measurementId: "G-1BWDFLWEMB"
 };
+
 firebase.initializeApp(firebaseConfig);
 
 const CLOUD_NAME="drqglqclz";
 const UPLOAD_PRESET="khursa";
+ 
 
 let currentUser=null;
+
+
 const loginBox=document.getElementById("loginBox");
 const addNewsPanel=document.getElementById("addNewsPanel");
 const logoutBtn=document.getElementById("logoutBtn");
@@ -300,8 +837,9 @@ function showPosts(){
       container.innerHTML+=`
       <div class="card">
         <div style="display:flex;align-items:center;gap:10px;">
-          <img src="${p.userProfile ? p.userProfile : 'https://i.pravatar.cc/40?img=68'}" 
-               style="width:40px;height:40px;border-radius:50%;">
+          <img onclick="showProfile('${p.userId}')"
+src="${p.userProfile ? p.userProfile : 'https://i.pravatar.cc/40?img=68'}"
+style="width:40px;height:40px;border-radius:50%;cursor:pointer;">
           <strong>${p.username}</strong>
         </div>
         <p>${p.text}</p>
@@ -449,7 +987,34 @@ firebase.auth().onAuthStateChanged(async user=>{
     showPosts();
     showNews();
   }
+  
 });
+firebase.auth().onAuthStateChanged(async user => {
+  if(user){
+    currentUser = user;
+    
+    // جلب بيانات المستخدم من Firebase
+    const userSnap = await firebase.database().ref("users/" + user.uid).once("value");
+    const userData = userSnap.val();
+
+    // تحديث صورة البروفايل
+    const profilePicEl = document.getElementById("myProfilePic");
+    if(userData && userData.profile){
+      profilePicEl.src = userData.profile; // صورة الحساب الفعلية
+    } else {
+      profilePicEl.src = "https://i.pravatar.cc/60"; // صورة افتراضية
+    }
+
+    // تابع باقي إعدادات الصفحة
+    showPosts();
+    showNews();
+    showStories();
+  } else {
+    currentUser = null;
+    document.getElementById("myProfilePic").src = "https://i.pravatar.cc/60"; // صورة افتراضية
+  }
+});
+
 </script>
 </body>
 </html>
